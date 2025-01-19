@@ -90,6 +90,24 @@
         const petForm = document.getElementById('pet-form');
         let pets = [];
         let editingIndex = null;
+        const API_URL = 'https://petstore.swagger.io/v2';
+
+        // Fetch pets from Petstore API
+        function fetchPets() {
+            fetch(`${API_URL}/pet/findByStatus?status=available`)
+                .then(response => response.json())
+                .then(data => {
+                    // Filter and transform the data to match our format
+                    pets = data.map(pet => ({
+                        id: pet.id,
+                        name: pet.name,
+                        type: pet.category?.name || 'Unknown',
+                        age: pet.tags?.[0]?.name || 'Unknown'
+                    }));
+                    renderPets();
+                })
+                .catch(error => console.error('Error fetching pets:', error));
+        }
 
         // Populate table with pets
         function renderPets() {
@@ -103,32 +121,62 @@
                     <td>${pet.age}</td>
                     <td>
                         <button class="btn btn-sm btn-primary" onclick="editPet(${index})">Edit</button>
-                        <button class="btn btn-sm btn-danger" onclick="deletePet(${index})">Delete</button>
+                        <button class="btn btn-sm btn-danger" onclick="deletePet(${pet.id})">Delete</button>
                     </td>
                 `;
                 petList.appendChild(row);
             });
         }
 
-        // Handle form submission
+        // Handle form submission for adding/editing a pet
         petForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const name = document.getElementById('name').value;
             const type = document.getElementById('type').value;
             const age = document.getElementById('age').value;
 
+            const petData = { name, type, age };
+
             if (editingIndex !== null) {
                 // Edit existing pet
-                pets[editingIndex] = { name, type, age };
+                updatePet(pets[editingIndex].id, petData);
                 editingIndex = null;
             } else {
                 // Add new pet
-                pets.push({ name, type, age });
+                addPet(petData);
             }
 
             petForm.reset();
-            renderPets();
         });
+
+        // Add new pet via Petstore API
+        function addPet(petData) {
+            const apiPetData = {
+                id: Date.now(), // Generate a temporary ID
+                name: petData.name,
+                category: {
+                    id: 1,
+                    name: petData.type
+                },
+                status: 'available',
+                tags: [{
+                    id: 1,
+                    name: petData.age.toString()
+                }]
+            };
+
+            fetch(`${API_URL}/pet`, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(apiPetData)
+            })
+                .then(response => response.json())
+                .then(() => fetchPets())
+                .catch(error => console.error('Error adding pet:', error));
+        }
 
         // Edit pet
         function editPet(index) {
@@ -139,14 +187,49 @@
             editingIndex = index;
         }
 
-        // Delete pet
-        function deletePet(index) {
-            pets.splice(index, 1);
-            renderPets();
+        // Update pet via Petstore API
+        function updatePet(id, petData) {
+            const apiPetData = {
+                id: id,
+                name: petData.name,
+                category: {
+                    id: 1,
+                    name: petData.type
+                },
+                status: 'available',
+                tags: [{
+                    id: 1,
+                    name: petData.age.toString()
+                }]
+            };
+
+            fetch(`${API_URL}/pet`, {
+                method: 'PUT',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(apiPetData)
+            })
+                .then(response => response.json())
+                .then(() => fetchPets())
+                .catch(error => console.error('Error updating pet:', error));
         }
 
-        // Initial render
-        renderPets();
+        // Delete pet via Petstore API
+        function deletePet(id) {
+            fetch(`${API_URL}/pet/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+                .then(() => fetchPets())
+                .catch(error => console.error('Error deleting pet:', error));
+        }
+
+        // Initial fetch
+        fetchPets();
     </script>
 </body>
 </html>
