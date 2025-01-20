@@ -1,7 +1,14 @@
-
 # 🚀 Laravel Project with Docker Support
 
-Welcome to this Laravel project! This application is fully containerized and powered by Docker, making it super easy to set up and run locally.
+
+- This project was created as a recruitment task.
+- File uploads currently do not work as expected due to an issue with generating URLs. The resulting links look like this:
+  ```
+  "http:\/\/localhost\/storage\/pets\/up1xMlZJCIR1fFCGkdUYxQAkPDa02JQNLgzdpqKo.png"
+  ```
+- For production deployment, additional steps like configuring a web server (e.g., Nginx) and SSL certificates are required.
+- The project was developed using **Sail on Windows**, so ensure compatibility if running on a different OS.
+
 
 ---
 
@@ -106,17 +113,16 @@ Here are some helpful commands for managing the project:
 
 ## 📝 Notes
 
-- This project assumes you are running it locally with Docker.
+- This project was created as a recruitment task.
+- File uploads currently do not work as expected due to an issue with generating URLs. The resulting links look like this:
+  ```
+  "http:\/\/localhost\/storage\/pets\/up1xMlZJCIR1fFCGkdUYxQAkPDa02JQNLgzdpqKo.png"
+  ```
 - For production deployment, additional steps like configuring a web server (e.g., Nginx) and SSL certificates are required.
 - The project was developed using **Sail on Windows**, so ensure compatibility if running on a different OS.
 
 ---
 
-## 🤝 Contribution
-
-Feel free to open issues or submit pull requests to improve this project!
-
----
-
 
 Enjoy coding! 🎉
+
