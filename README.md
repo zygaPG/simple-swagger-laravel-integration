@@ -11,6 +11,10 @@
 
 ---
 
+![Opis obrazka](example_for_README.png)
+
+---
+
 ## 🐳 Getting Started with Docker
 
 ### Prerequisites
