@@ -6,7 +6,6 @@
   ```
   "http:\/\/localhost\/storage\/pets\/up1xMlZJCIR1fFCGkdUYxQAkPDa02JQNLgzdpqKo.png"
   ```
-- For production deployment, additional steps like configuring a web server (e.g., Nginx) and SSL certificates are required.
 - The project was developed using **Sail on Windows**, so ensure compatibility if running on a different OS.
 
 
