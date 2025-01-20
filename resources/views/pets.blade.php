@@ -72,8 +72,15 @@
             </div>
             <div class="mb-3">
                 <label for="type" class="form-label">Pet Type</label>
-                <input type="text" class="form-control" id="type" placeholder="Enter pet type (e.g., dog, cat)"
-                    required>
+                <select class="form-control" id="type" required>
+                    <option value="" disabled selected>Select pet type</option>
+                    <option value="dog">Dog</option>
+                    <option value="cat">Cat</option>
+                    <option value="bird">Bird</option>
+                    <option value="fish">Fish</option>
+                    <option value="reptile">Reptile</option>
+                    <option value="small mammal">Small Mammal</option>
+                </select>
             </div>
             <div class="mb-3">
                 <label for="age" class="form-label">Pet Age</label>
@@ -231,7 +238,6 @@
 
         // Update pet via Petstore API
         function updatePet(id, petData) {
-            const formData = new FormData();
             const photoFile = document.getElementById('photo').files[0];
             
             const apiPetData = {
@@ -249,23 +255,30 @@
                 photoUrls: [petData.photoUrl || '']
             };
 
-            formData.append('photo', photoFile);
-            formData.append('petData', JSON.stringify(apiPetData));
-
-            fetch(`${API_URL}/pet/${id}`, {
-                method: 'POST',
+            fetch(`${API_URL}/pet`, {
+                method: 'PUT',
                 headers: {
                     'Accept': 'application/json',
+                    'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': csrfToken
                 },
-                body: formData
+                body: JSON.stringify(apiPetData)
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            throw new Error(`Server responded with ${response.status}: ${text}`);
+                        });
+                    }
+                    return response.json();
+                })
                 .then(() => {
                     fetchPets();
                     document.getElementById('photo').value = '';
                 })
-                .catch(error => console.error('Error updating pet:', error));
+                .catch(error => {
+                    console.error('Error updating pet:', error);
+                });
         }
 
         // Delete pet via Petstore API

@@ -48,10 +48,10 @@ class PetController extends Controller
     }
 
    
-    public function updatePet(Request $request, $id)
+    public function updatePet(Request $request)
     {
         try {
-            $petData = json_decode($request->input('petData'), true);
+            $petData = $request->all();
             
             if ($request->hasFile('photo')) {
                 $path = $request->file('photo')->store('pets', 'public');
