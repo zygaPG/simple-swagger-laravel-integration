@@ -45,7 +45,7 @@ Make sure you have the following installed:
    - Build and start all Docker containers.
    - Set up the application environment.
 
-4. Run migrations to set up the database:
+4. Once the application's Docker containers have started, you should run your application's database migrations:
    ```bash
    ./vendor/bin/sail artisan migrate
    ```
